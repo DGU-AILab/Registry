@@ -1,0 +1,45 @@
+---
+
+- hosts: all
+  strategy: free
+  tasks:
+   - name: Create patch directory 
+     become: true
+     command: mkdir -p /home/4whomtbts/patch/20200707
+
+   - name: Share script
+     become: true
+     copy:
+      src: /home/4whomtbts/ansible/patch/20200707/
+      dest: /home/4whomtbts/patch/20200707/
+
+   - name: Make script executable 
+     become: true
+     command: chmod +x /home/4whomtbts/patch/20200707/patch.sh
+     with_inventory_hostnames: labs
+
+   - name: Run script
+     become: true
+     shell: /home/4whomtbts/patch/20200707/patch.sh "{{ hostvars[item]['server_id'] }}" 20200707
+     with_inventory_hostnames: labs
+      # - name: Execute script
+      #     become: true
+      #     command: /bin/sh /home/4whomtbts/patch/20200708/patch.sh "{{ hostvars[item]['server_id'] }}" 20200708
+      #     with_inventory_hostnames: labs
+     
+      #   - name: chdir to ailab git directory
+      #    shell: echo chdir
+      #    become: true
+      #    become_user: 4whomtbts
+      #    args: 
+      #     chdir: ~/ailab_git
+
+      #  - name: Build and Run docker
+      #    become: true
+      #    become_user: 4whomtbts
+      #    command: /bin/sh /home/4whomtbts/ailab_git/start.sh "{{ hostvars[item]['server_id'] }}"
+      #    with_inventory_hostnames: labs
+      
+  
+
+        
